@@ -1,1 +1,66 @@
 
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+       /* Set the size of the div element that contains the map */
+      #map {
+        height: 400px;
+        width: 600px;
+       }
+       div#msg {
+          margin-top: 10px;
+          margin-left: 137px;
+      }
+    </style>
+  </head>
+  <body>
+    <!--The div elements for the map and message -->
+    <div id="map"></div>
+    <div id="msg"></div>
+    <script>
+// Initialize and add the map
+
+var map;
+function initMap() {
+
+  const options = {zoom: 15, scaleControl: true};
+  map = new google.maps.Map(document.getElementById('map'), options);
+
+   const dakota ="Mohali Bus Stand, Mohali Bypass, Phase 6, Sector 58, Sahibzada Ajit Singh Nagar, Punjab, India";
+   const frick ="Delhi";
+
+  let directionsService = new google.maps.DirectionsService();
+  let directionsRenderer = new google.maps.DirectionsRenderer();
+  directionsRenderer.setMap(map); // Existing map object displays directions
+
+  const route = {
+      origin: dakota,
+      destination: frick,
+      travelMode: 'DRIVING'
+  }
+
+  directionsService.route(route,
+    function(response, status) { // anonymous function to capture directions
+      if (status !== 'OK') {
+        window.alert('Directions request failed due to ' + status);
+        return;
+      } else {
+        directionsRenderer.setDirections(response); // Add route to the map
+        var directionsData = response.routes[0].legs[0]; // Get data about the mapped route
+        if (!directionsData) {
+          window.alert('Directions request failed');
+          return;
+        }
+        else {
+          document.getElementById('msg').innerHTML += " Driving distance is " + directionsData.distance.text + " (" + directionsData.duration.text + ").";
+        }
+      }
+    });
+}
+
+    </script>
+    <!--Load the API from the specified URL -- remember to replace YOUR_API_KEY-->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=BIzaSyA9aHGBWX3R2vWVpkv2FTwGiLguML7mv48&callback=initMap"></script>
+  </body>
+</html>
